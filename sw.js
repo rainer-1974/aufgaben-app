@@ -1,6 +1,6 @@
 /* Aufgaben-App – hält nur die App-Dateien offline vor. Anfragen an Dropbox werden nie
    abgefangen oder zwischengespeichert. */
-const CACHE = "aufgabenapp-v1";
+const CACHE = "aufgabenapp-v2";
 const DATEIEN = [
   "./", "index.html", "styles.css", "kern.js", "dropbox.js", "app.js",
   "manifest.json", "icon.svg", "icon-180.png", "icon-192.png", "icon-512.png",

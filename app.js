@@ -141,12 +141,14 @@
     }
     for (const s of statusWerte) statusOpt.push([s, s]);
     fuelleSelect($("f-status"), statusOpt, f.status);
-    if ($("f-status").value !== f.status) f.status = $("f-status").value;
+    // Nicht mehr vorhandene Filterwerte nur bei geladenen Daten verwerfen; ohne Daten (Erststart)
+    // fehlen alle Optionen, und die Voreinstellung "aktiv" ginge sonst dauerhaft verloren.
+    if (liste.length && $("f-status").value !== f.status) f.status = $("f-status").value;
 
     for (const [id, feld, alle] of [["f-prio", "prio", "Alle Prioritäten"], ["f-bereich", "bereich", "Alle Bereiche"], ["f-wer", "wer", "Alle Verantwortlichen"]]) {
       const w = K.werte(liste, feld);
       fuelleSelect($(id), [["", alle]].concat(w.map((x) => [x, x])), f[feld]);
-      if ($(id).value !== f[feld]) f[feld] = $(id).value;
+      if (liste.length && $(id).value !== f[feld]) f[feld] = $(id).value;
     }
 
     const s = ui.sort[a];

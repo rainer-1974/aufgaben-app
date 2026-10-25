@@ -195,10 +195,15 @@
     id: { name: "ID", f: (a, b, ab) => (ab ? -1 : 1) * idVergleich(a.id, b.id) },
   };
 
+  function abgeschlossen(r) {
+    return ABGESCHLOSSEN.includes(r.status) ? 1 : 0;
+  }
+
+  // Erledigte und entfallene Einträge stehen immer hinter den aktiven, gleich welche Sortierung.
   function sortiere(liste, schluessel, absteigend) {
     const s = SORTIERUNGEN[schluessel] || SORTIERUNGEN.id;
     return liste.slice().sort((a, b) => {
-      return s.f(a, b, absteigend) || prioRang(a.prio) - prioRang(b.prio) || idVergleich(a.id, b.id);
+      return abgeschlossen(a) - abgeschlossen(b) || s.f(a, b, absteigend) || prioRang(a.prio) - prioRang(b.prio) || idVergleich(a.id, b.id);
     });
   }
 
