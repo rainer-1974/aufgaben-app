@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Aufgaben">
+  <meta name="theme-color" content="#f4f4f7" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111114" media="(prefers-color-scheme: dark)">
+  <title>Aufgaben</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="kopf">
+    <div class="kopf-zeile">
+      <h1>Aufgaben</h1>
+      <div class="kopf-knoepfe">
+        <button id="neu-laden" class="icon-knopf" type="button" aria-label="Neu laden">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5"/></svg>
+        </button>
+        <button id="einstellungen-oeffnen" class="icon-knopf" type="button" aria-label="Einstellungen">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+        </button>
+      </div>
+    </div>
+    <p id="stand" class="stand"></p>
+
+    <nav class="segment" role="tablist" aria-label="Ansicht">
+      <button type="button" role="tab" data-ansicht="offen">Offen <span class="anzahl"></span></button>
+      <button type="button" role="tab" data-ansicht="erledigt">Erledigt <span class="anzahl"></span></button>
+      <button type="button" role="tab" data-ansicht="wv">Wiedervorlagen <span class="anzahl"></span></button>
+    </nav>
+
+    <div class="werkzeuge">
+      <input id="suche" type="search" placeholder="Suchen (ID, Text, Person …)" autocomplete="off" enterkeyhint="search">
+      <div class="filter">
+        <select id="f-status" aria-label="Status"></select>
+        <select id="f-prio" aria-label="Priorität"></select>
+        <select id="f-bereich" aria-label="Bereich"></select>
+        <select id="f-wer" aria-label="Verantwortlicher"></select>
+      </div>
+      <div class="sortierung">
+        <label for="sortieren">Sortieren</label>
+        <select id="sortieren"></select>
+        <button id="richtung" type="button" class="richtung" aria-label="Richtung umkehren"></button>
+        <button id="zuruecksetzen" type="button" class="text-knopf">Filter zurücksetzen</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div id="meldung" class="meldung" hidden></div>
+    <p id="zaehler" class="zaehler"></p>
+    <ul id="liste" class="liste"></ul>
+    <section id="willkommen" class="willkommen" hidden>
+      <h2>Noch nicht eingerichtet</h2>
+      <p>Die App liest die Aufgabenmappe direkt und nur lesend aus Dropbox. Bitte in den
+        Einstellungen den Dateipfad eintragen und Dropbox verbinden.</p>
+      <button type="button" class="haupt-knopf" data-oeffne-einstellungen>Einstellungen öffnen</button>
+    </section>
+  </main>
+
+  <dialog id="einstellungen">
+    <form method="dialog" class="dialog-kopf">
+      <h2>Einstellungen</h2>
+      <button class="text-knopf" value="schliessen">Fertig</button>
+    </form>
+
+    <section>
+      <h3>Datei in Dropbox</h3>
+      <label for="pfad">Pfad zur Aufgabenmappe</label>
+      <input id="pfad" type="text" placeholder="/Ordner/Aufgaben-und-Wiedervorlagen_Familie.xlsx" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <p class="hinweis">Beginnt mit „/“ und entspricht dem Pfad in der Dropbox.</p>
+    </section>
+
+    <section>
+      <h3>Dropbox-Verbindung</h3>
+      <div id="getrennt">
+        <label for="appkey">App-Schlüssel</label>
+        <input id="appkey" type="text" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <p class="hinweis">Aus der eigenen Dropbox-App (nur Leserechte). Der App-Schlüssel ist kein Geheimnis.</p>
+        <a id="anmelden" class="haupt-knopf deaktiviert" target="_blank" rel="noopener" aria-disabled="true">1. Bei Dropbox anmelden</a>
+        <label for="code">2. Angezeigten Code einfügen</label>
+        <input id="code" type="text" autocomplete="off" autocapitalize="off" spellcheck="false">
+        <button id="verbinden" type="button" class="haupt-knopf">Verbinden</button>
+      </div>
+      <div id="verbunden" hidden>
+        <p class="ok">Mit Dropbox verbunden (nur lesend).</p>
+        <button id="abmelden" type="button" class="gefahr-knopf">Abmelden und Daten von diesem Gerät löschen</button>
+      </div>
+      <p id="verbindung-fehler" class="fehler" hidden></p>
+    </section>
+
+    <p class="hinweis fuss">Die App liest die Mappe nur und kann nichts zurückschreiben. Der zuletzt
+      geladene Stand bleibt für die Offline-Ansicht auf diesem Gerät gespeichert.</p>
+  </dialog>
+
+  <script src="vendor/xlsx.mini.min.js"></script>
+  <script src="kern.js"></script>
+  <script src="dropbox.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
